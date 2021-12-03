@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Whatsapp API</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/bootstrap.min.css">
+	<style>
+		*{
+			font-family: 'Nunito', sans-serif;
+		}
+	</style>
+</head>
+<body class="bg-light">
+
+	<div class="container" id="app" style="margin-top:20px;">
+		<div class="row">
+			<div class="col-lg-6 mx-auto">
+				<div class="card border-0 shadow-sm">
+					<div class="card-body">
+						<div class="text-center">
+							<h4>Whatsapp API</h4>
+							<img src="" alt="QR Code" id="qrcode">
+							<p id="psn" class="d-none">Silahkan pindai Kode QR</p>
+							<div id="konek" class="d-none mt-4 alert alert-success border-0">Whatsapp Sudah Siap!</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="/jquery-3.6.0.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		$(document).ready(function() {
+			var socket = io();
+
+			socket.on('message', function(msg) {
+				console.log(msg)
+			});
+
+			socket.on('qr', function(src) {
+				$('#qrcode').attr('src', src);
+				$('#qrcode').show();
+				$("#psn").removeClass("d-none");
+				$("#konek").addClass("d-none");
+			});
+
+			socket.on('ready', function(data) {
+				$('#qrcode').hide();
+				$("#psn").addClass("d-none");
+				$("#konek").removeClass("d-none");
+			});
+
+			socket.on('authenticated', function(data) {
+				$('#qrcode').hide();
+			});
+		});
+	</script>
+</body>
+</html>
